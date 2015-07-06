@@ -1,0 +1,10 @@
+{
+	"name": "node-monitor",
+	"version": "0.0.1",
+	"dependencies": {
+		"express": "^4.10.6",
+		"socket.io-client":"*",
+		"request":"*",
+		"body-parser":"^1.12.0"
+	}
+}
