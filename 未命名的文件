@@ -1,0 +1,26 @@
+#!/bin/bash
+# check bandwidth usage
+while :  
+do  
+	vnstat -tr 2 -i eth0 > /tmp/monitor_txrx_bw # 2 seconds average
+	#BW_CONSOLE=$(cat /tmp/monitor_txrx_bw) 
+	#echo "$BW_CONSOLE"
+
+	BW_IN=$(cat /tmp/monitor_txrx_bw | grep rx | awk '{print $2}') #| grep -v kbit | awk '{print $2}' | cut  -d . -f1)
+	BW_OUT=$(cat /tmp/monitor_txrx_bw | grep tx | awk '{print $2}') #| grep -v kbit | awk '{print $2}' | cut  -d . -f1)
+	BW_IN_UNIT=$(cat /tmp/monitor_txrx_bw | grep rx | awk '{print $3}') 
+	BW_OUT_UNIT=$(cat /tmp/monitor_txrx_bw | grep tx | awk '{print $3}') 
+	
+	if [ "$BW_IN_UNIT" = "Mbit/s" ]; then
+		BW_IN_F=$(expr $BW_IN*1024 | bc)
+		BW_IN=${BW_IN_F%.*}
+	fi
+
+	if [ "$BW_OUT_UNIT" = "Mbit/s" ]; then
+		BW_OUT_F=$(expr $BW_OUT*1024 | bc)
+		BW_OUT=${BW_OUT_F%.*}
+	fi
+	#echo "in $BW_IN:out $BW_OUT" 
+	echo "in $BW_IN:out $BW_OUT" > /tmp/monitor_txrx_bw_r
+	echo 'get bandwidth...'
+done
